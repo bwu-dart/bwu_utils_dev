@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- custom_html_test.html -->
+<html>
+  <head>
+    <title>browser/webdriver test</title>
+    <link rel="import" href="app_element.html">
+    <link rel="import" href="child_element.html">
+    <script>
+//      function f(done) {
+//        var _done = function(e) {
+//          window.removeEventListener('WebComponentsReady', _done);
+//          window.removeEventListener('polymer-ready', _done);
+//          done('xxx');
+//        };
+//
+//        window.addEventListener('WebComponentsReady', done);
+//        window.addEventListener('polymer-ready', done);
+//      }
+//      f();
+    </script>
+  </head>
+  <body>
+    <div id="granny">
+      <div>
+        <div id="parent">
+          <div>
+            <div id="child">child</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-element id="polymer-parent" unresolved>
+      <child-element id="polymer-child"></child-element>
+    </app-element>
+    <script type="application/dart">export 'package:polymer/init.dart';</script>
+  </body>
+</html>
