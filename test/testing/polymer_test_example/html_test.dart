@@ -2,7 +2,6 @@
 @TestOn('browser')
 library bwu_utils.test.browser.polymer_test_example;
 
-import 'dart:async' show Completer, Future, Stream, Zone;
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';
 import 'package:bwu_utils_dev/testing_browser.dart';
@@ -11,17 +10,15 @@ export 'package:polymer/init.dart';
 
 final _log = new Logger('bwu_utils.test.shared.test_parse_num');
 
-main() {
+@whenPolymerReady
+init() {
   initLogging();
-  Zone zone;
 
   group('getParentElement', () {
     setUp(() async {
-      if (zone == null) zone = await initPolymer();
-      await Polymer.onReady;
     });
 
-    test('simple DOM elements', () => zone.run(() {
+    test('simple DOM elements', () {
       // set up
       final elem = dom.document.querySelector('#child');
 
@@ -32,9 +29,9 @@ main() {
       expect(parent, equals(dom.document.querySelector('#parent')));
 
       // tear down
-    }));
+    });
 
-    test('Polymer elements', () => zone.run(() {
+    test('Polymer elements', () {
       // set up
       final elem = dom.document.querySelector('#polymer-child');
 
@@ -47,9 +44,9 @@ main() {
       expect(parent, equals(expectedParent));
 
       // tear down
-    }));
+    });
 
-    test('Polymer shadow DOM elements', () => zone.run(() {
+    test('Polymer shadow DOM elements', () {
       // set up
       final elem = dom.document.querySelector('* /deep/ #shadow-dom-child');
       expect(elem, isNotNull);
@@ -62,6 +59,6 @@ main() {
       expect(parent, equals(expectedParent));
 
       // tear down
-    }), timeout: const Timeout(const Duration(minutes: 3)));
-  }, skip: 'blocked on https://github.com/dart-lang/polymer-dart/issues/60');
+    }, timeout: const Timeout(const Duration(minutes: 3)));
+  });
 }
