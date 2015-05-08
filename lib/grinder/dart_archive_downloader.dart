@@ -1,4 +1,4 @@
-library bwu_utils.grinder.dart_archive_downloader;
+library bwu_utils_dev.grinder.dart_archive_downloader;
 
 import 'dart:io' as io;
 import 'dart:async' show Completer, Future, Stream;
@@ -164,17 +164,19 @@ class VersionInfo {
   String _version;
   String get version => _version;
   int get versionAsInt {
-    if (version != null) {
-      return int.parse(version, onError: (_) => 0);
+    if (version == null) {
+      return null;
     }
+    return int.parse(version, onError: (_) => 0);
   }
 
   String _date;
   String get date => _date;
   DateTime get dateAsDateTime {
-    if (date != null) {
-      return DateTime.parse(date);
+    if (date == null) {
+      return null;
     }
+    return DateTime.parse(date);
   }
 
   factory VersionInfo.fromJsonBytes(List<int> bytes) =>

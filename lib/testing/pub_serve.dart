@@ -1,4 +1,4 @@
-library bwu_utils.testing.server.pub_serve;
+library bwu_utils_dev.testing.server.pub_serve;
 
 import 'dart:io' as io;
 import 'dart:async' show Completer, Future, Stream, StreamController;

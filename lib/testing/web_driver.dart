@@ -1,10 +1,9 @@
-library bwu_utils.testing.web_driver;
+library bwu_utils_dev.testing.web_driver;
 
 import 'dart:io' as io;
 import 'dart:async' show Completer, Future, Stream;
 import 'package:webdriver/io.dart';
 export 'package:webdriver/io.dart';
-export 'package:webdriver/async_helpers.dart';
 import 'package:which/which.dart';
 import 'package:bwu_utils_dev/testing_server.dart';
 
@@ -241,7 +240,7 @@ class CustomWebDriver implements WebDriver {
   Map<String, dynamic> get capabilities => _driver.capabilities;
 
   @override
-  Future<List<int>> captureScreenshot() => _driver.captureScreenshot();
+  Stream<int> captureScreenshot() => _driver.captureScreenshot();
 
   @override
   Future close() => _driver.close();

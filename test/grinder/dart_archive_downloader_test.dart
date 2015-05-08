@@ -1,5 +1,5 @@
 @TestOn('vm')
-library bwu_utils.test.grinder.dart_archive_downloader;
+library bwu_utils_dev.test.grinder.dart_archive_downloader;
 
 import 'dart:io' as io;
 import 'package:path/path.dart' as path;

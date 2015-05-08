@@ -1,4 +1,4 @@
-library bwu_utils.grinder.dartformat_task;
+library bwu_utils_dev.grinder.dartformat_task;
 
 import 'package:grinder/grinder.dart';
 

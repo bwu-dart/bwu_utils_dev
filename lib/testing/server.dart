@@ -1,4 +1,4 @@
-library bwu_utils.testing.server;
+library bwu_utils_dev.testing.server;
 
 export 'dart:async' show Future, Stream, Completer;
 export 'package:test/test.dart';

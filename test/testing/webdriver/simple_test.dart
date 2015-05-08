@@ -1,5 +1,5 @@
 @TestOn('vm')
-library bwu_utils.test.testing.webdriver.simple_test;
+library bwu_utils_dev.test.testing.webdriver.simple_test;
 
 import 'package:logging/logging.dart' show Logger;
 import 'package:bwu_utils_dev/testing_server.dart';

@@ -1,4 +1,4 @@
-library bwu_utils.grinder.analyzer_task;
+library bwu_utils_dev.grinder.analyzer_task;
 
 import 'dart:io' as io;
 import 'package:grinder/grinder.dart';

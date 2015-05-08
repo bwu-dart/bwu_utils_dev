@@ -1,6 +1,6 @@
 @Timeout(const Duration(minutes: 5))
 @TestOn('vm')
-library bwu_utils.test.testing.webdriver.polymer;
+library bwu_utils_dev.test.testing.webdriver.polymer;
 
 import 'dart:io' as io;
 import 'package:bwu_utils_dev/testing_server.dart';
