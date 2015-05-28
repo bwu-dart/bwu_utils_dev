@@ -175,9 +175,9 @@ class ChromeDriverFactory extends WebDriverFactory {
 class DartiumDriverFactory extends WebDriverFactory {
   io.Process _process;
 
-  DartiumDriverFactory() : super('/home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver') {
+  DartiumDriverFactory() : super('chromedriver') { // /home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver') {
 //    if (_env['CHROME_BINARY'] != null) {
-      chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome'; // _env['CHROME_BINARY'];
+      chromeOptions['binary'] = 'dartium'; //'/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome'; // _env['CHROME_BINARY'];
       //chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver'; _env['CHROME_BINARY'];
 //    }
 //    if (_env['CHROMEDRIVER_ARGS'] != null) {

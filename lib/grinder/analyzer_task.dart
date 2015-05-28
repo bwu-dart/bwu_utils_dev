@@ -10,5 +10,5 @@ void analyzerTask(
           new io.Directory(dir), pattern: '*.dart', recurse: true).files
       .map((f) => f.absolute.path)));
 
-  Analyzer.analyzeFiles(_files, fatalWarnings: true);
+  Analyzer.analyze(_files, fatalWarnings: true);
 }

@@ -74,7 +74,7 @@ main([List<String> args]) {
       print('page source: ${await driver.pageSource}');
       final screenShot = new io.File('screenshot.png');
       final sink = screenShot.openWrite();
-      sink.add(await driver.captureScreenshot());
+      sink.add(await driver.captureScreenshot().toList());
       //if(canShadowDom) {
         print('use shadow DOM');
 //        someDiv =

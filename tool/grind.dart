@@ -21,20 +21,19 @@ analyze() => analyzerTask(files: [], directories: sourceDirs);
 
 @Task('Runn all tests')
 test() => _test(
-    ['vm', 'dartium', 'chrome', 'phantomjs', 'firefox', /*content-shell*/],
+    ['vm', 'dartium', 'chrome', 'phantomjs', 'firefox', 'content-shell'],
     runPubServe: true);
 
 @Task('Run all VM tests')
 testIo() => _test(['vm']);
 
 @Task('Run all browser tests')
-testHtml() => _test(['content-shell'], runPubServe: true);
+testHtml() => _test(['chrome'], runPubServe: true);
 
 Future _test(List<String> platforms,
     {bool runPubServe: true, bool runSelenium: true}) async {
   if (runPubServe || runSelenium) {
-    final seleniumJar =
-        '/usr/local/apps/webdriver/selenium-server-standalone-2.45.0.jar';
+    final seleniumJar = io.Platform.environment['SELENIUM_JAR'];
 
     final pubServe = new PubServe();
     final selenium = new SeleniumStandaloneServer();
