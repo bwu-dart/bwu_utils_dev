@@ -63,6 +63,10 @@ packages:
     description: html
     source: hosted
     version: "0.12.1+1"
+  http:
+    description: http
+    source: hosted
+    version: "0.11.2"
   http_multi_server:
     description: http_multi_server
     source: hosted
