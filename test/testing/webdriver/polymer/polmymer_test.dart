@@ -4,15 +4,15 @@ library bwu_utils_dev.test.testing.webdriver.polymer;
 
 import 'dart:io' as io;
 import 'package:bwu_utils_dev/testing_server.dart';
-import 'package:which/which.dart';
+//import 'package:which/which.dart';
 
 final _log = new Logger('bwu_utils.test.testing.webdriver.polymer');
 
 main([List<String> args]) {
   initLogging(args);
 //  WebDriverFactory wdFactory = new ChromeDriverFactory()
-    //..chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome';
-    //whichSync('dartium', orElse: () => null);
+  //..chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome';
+  //whichSync('dartium', orElse: () => null);
   WebDriverFactory wdFactory =
       createDriverFactory(); // TODO(zoechi) make it work with Dartium
 
@@ -53,8 +53,12 @@ main([List<String> args]) {
       //driver.timeouts.setImplicitTimeout(const Duration(seconds: 15));
 
       // http://caniuse.com/#feat=shadowdom
-      bool canShadowDom =
-          ['chrome', 'dartium', 'opera'].contains(driver.capabilities['browserName']);
+      //bool canShadowDom =
+      [
+        'chrome',
+        'dartium',
+        'opera'
+      ].contains(driver.capabilities['browserName']);
       print(await driver.execute('return window.navigator.userAgent;', []));
 
       var ret = await driver.executeAsync('''
@@ -67,7 +71,7 @@ main([List<String> args]) {
 
   window.addEventListener('WebComponentsReady', _done);
   window.addEventListener('polymer-ready', _done);
-      ''',[]);
+      ''', []);
       print(ret);
 
       WebElement someDiv;
@@ -76,12 +80,12 @@ main([List<String> args]) {
       final sink = screenShot.openWrite();
       sink.add(await driver.captureScreenshot().toList());
       //if(canShadowDom) {
-        print('use shadow DOM');
+      print('use shadow DOM');
 //        someDiv =
 //          await driver.findElement(const By.cssSelector('* /deep/ #some-div'));
 //      } else {
-        print('no shadow DOM');
-        someDiv = await driver.findElement(const By.cssSelector('#some-div'));
+      print('no shadow DOM');
+      someDiv = await driver.findElement(const By.cssSelector('#some-div'));
 //      }
       print(someDiv);
       expect(title, equals('browser/webdriver test'));

@@ -6,8 +6,6 @@ import 'package:grinder/grinder.dart';
 import 'package:bwu_utils_dev/grinder.dart';
 import 'package:bwu_utils_dev/testing_server.dart';
 
-const sourceDirs = const ['lib', 'tool', 'test'];
-
 // TODO(zoechi) check if version was incremented
 // TODO(zoechi) check if CHANGELOG.md contains version
 
@@ -16,19 +14,49 @@ main(List<String> args) => grind(args);
 //@Task('Delete build directory')
 //void clean() => defaultClean(context);
 
+const existingSourceDirs = const ['lib', 'test', 'tool'];
+
 @Task('Run analyzer')
-analyze() => analyzerTask(files: [], directories: sourceDirs);
+analyze() => _analyze();
 
 @Task('Runn all tests')
 test() => _test(
-    ['vm', 'dartium', 'chrome', 'phantomjs', 'firefox', 'content-shell'],
-    runPubServe: true);
+// TODO(zoechi) fix to support other browsers
+    [
+  'vm',
+  'content-shell', /*'dartium', 'chrome', 'phantomjs', 'firefox',*/
+], runPubServe: true);
 
 @Task('Run all VM tests')
 testIo() => _test(['vm']);
 
 @Task('Run all browser tests')
 testHtml() => _test(['chrome'], runPubServe: true);
+
+@Task('Check everything')
+@Depends(analyze, checkFormat, lint, test)
+@DefaultTask()
+check() => _check();
+
+@Task('Check source code format')
+checkFormat() => checkFormatTask(existingSourceDirs);
+
+/// format-all - fix all formatting issues
+@Task('Fix all source format issues')
+format() => _format();
+
+@Task('Run lint checks')
+lint() => _lint();
+
+_analyze() => new PubApp.global('tuneup').run(['check']);
+
+_check() => run('pub', arguments: ['publish', '-n']);
+
+_format() => new PubApp.global('dart_style').run(
+    ['-w']..addAll(existingSourceDirs), script: 'format');
+
+_lint() => new PubApp.global('linter')
+    .run(['--stats', '-ctool/lintcfg.yaml']..addAll(existingSourceDirs));
 
 Future _test(List<String> platforms,
     {bool runPubServe: true, bool runSelenium: true}) async {
@@ -71,19 +99,3 @@ Future _test(List<String> platforms,
 
 //  final chromeBin = '-Dwebdriver.chrome.bin=/usr/bin/google-chrome';
 //  final chromeDriverBin = '-Dwebdriver.chrome.driver=/usr/local/apps/webdriver/chromedriver/2.15/chromedriver_linux64/chromedriver';
-
-@Task('Check everything')
-@Depends(analyze, checkFormat, lint, test)
-check() {}
-
-@Task('Check source code format')
-checkFormat() => checkFormatTask(['.']);
-
-/// format-all - fix all formatting issues
-@Task('Fix all source format issues')
-formatAll() => new PubApp.global('dart_style').run(['-w']..addAll(sourceDirs),
-    script: 'format');
-
-@Task('Run lint checks')
-lint() => new PubApp.global('linter')
-    .run(['--stats', '-ctool/lintcfg.yaml']..addAll(sourceDirs));

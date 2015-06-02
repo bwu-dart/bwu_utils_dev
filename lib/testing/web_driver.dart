@@ -75,7 +75,7 @@ class PhantomJSDriverFactory extends WebDriverFactory {
   Future startFactory() {
     //return io.Process.start('phantomjs', ['--webdriver=9515']).then((p) {
     //  _process = p;
-      //return new Future.delayed(new Duration(seconds: 1));
+    //return new Future.delayed(new Duration(seconds: 1));
     //});
     return new Future.value();
   }
@@ -91,9 +91,10 @@ class PhantomJSDriverFactory extends WebDriverFactory {
     return createDriver(
         //uri: Uri.parse('http://127.0.0.1:9515/wd'),
         uri: Uri.parse('http://127.0.0.1:4444/wd/hub/'),
-        desired: Capabilities.empty ..[Capabilities.browserName] = 'phantomjs'
-            ..[Capabilities.version] = ''
-            ..[Capabilities.platform] = BrowserPlatform.any);
+        desired: Capabilities.empty
+      ..[Capabilities.browserName] = 'phantomjs'
+      ..[Capabilities.version] = ''
+      ..[Capabilities.platform] = BrowserPlatform.any);
   }
 }
 
@@ -175,10 +176,12 @@ class ChromeDriverFactory extends WebDriverFactory {
 class DartiumDriverFactory extends WebDriverFactory {
   io.Process _process;
 
-  DartiumDriverFactory() : super('chromedriver') { // /home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver') {
+  DartiumDriverFactory() : super('chromedriver') {
+    // /home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver') {
 //    if (_env['CHROME_BINARY'] != null) {
-      chromeOptions['binary'] = 'dartium'; //'/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome'; // _env['CHROME_BINARY'];
-      //chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver'; _env['CHROME_BINARY'];
+    chromeOptions['binary'] =
+        'dartium'; //'/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome'; // _env['CHROME_BINARY'];
+    //chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/chromedriver-lucid64-full-stable-45104.0/chromedriver'; _env['CHROME_BINARY'];
 //    }
 //    if (_env['CHROMEDRIVER_ARGS'] != null) {
 //      chromeOptions['args'] = _env['CHROMEDRIVER_ARGS'].split(' ');
@@ -220,7 +223,12 @@ class DartiumDriverFactory extends WebDriverFactory {
 }
 
 class DartiumWebDriver extends CustomWebDriver {
-  DartiumWebDriver._(WebDriver driver, String userAgent) : super._(driver, userAgent);
+  DartiumWebDriver._(WebDriver driver, String userAgent)
+      : super._(driver, userAgent);
+
+  // TODO: implement onAfterCommand
+  @override
+  Stream<WebDriverCommandEvent> get onAfterCommand => null;
 }
 
 class CustomWebDriver implements WebDriver {
@@ -261,7 +269,8 @@ class CustomWebDriver implements WebDriver {
   Future execute(String script, List args) => _driver.execute(script, args);
 
   @override
-  Future executeAsync(String script, List args) => _driver.executeAsync(script, args);
+  Future executeAsync(String script, List args) =>
+      _driver.executeAsync(script, args);
 
   @override
   Future<WebElement> findElement(By by, {By noShadowDom}) {
@@ -298,7 +307,8 @@ class CustomWebDriver implements WebDriver {
   Future<String> get pageSource => _driver.pageSource;
 
   @override
-  Future postRequest(String command, [params]) => _driver.postRequest(command, params);
+  Future postRequest(String command, [params]) =>
+      _driver.postRequest(command, params);
 
   @override
   Future quit() => quit();
@@ -320,5 +330,8 @@ class CustomWebDriver implements WebDriver {
 
   @override
   Stream<Window> get windows => _driver.windows;
-}
 
+  // TODO: implement onAfterCommand
+  @override
+  Stream<WebDriverCommandEvent> get onAfterCommand => null;
+}
