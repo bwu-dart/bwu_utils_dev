@@ -1,6 +1,6 @@
 @Timeout(const Duration(minutes: 10))
 @TestOn('browser')
-library bwu_utils.test.browser.polymer_test_example;
+library bwu_utils_dev.test.testing.polymer_test_example;
 
 import 'dart:html' as dom;
 import 'package:polymer/polymer.dart';

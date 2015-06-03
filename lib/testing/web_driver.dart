@@ -130,14 +130,14 @@ class FirefoxDriverFactory extends WebDriverFactory {
 class ChromeDriverFactory extends WebDriverFactory {
   io.Process _process;
 
-  ChromeDriverFactory() : super('chromedriver') {
+  ChromeDriverFactory() : super('chromedriver'); // {
 //    if (_env['CHROME_BINARY'] != null) {
 //      chromeOptions['binary'] = _env['CHROME_BINARY'];
 //    }
 //    if (_env['CHROMEDRIVER_ARGS'] != null) {
 //      chromeOptions['args'] = _env['CHROMEDRIVER_ARGS'].split(' ');
 //    }
-  }
+//  }
 
   bool get isAvailable => whichSync('dartium', orElse: () => null) != null;
 
