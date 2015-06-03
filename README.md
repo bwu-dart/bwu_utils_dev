@@ -5,5 +5,4 @@
 [![Build Status](https://travis-ci.org/bwu-dart/bwu_utils_dev.svg?branch=travis)](https://travis-ci.org/bwu-dart/bwu_utils_dev)
 [![Coverage Status](https://coveralls.io/repos/bwu-dart/bwu_utils_dev/badge.svg)](https://coveralls.io/r/bwu-dart/bwu_utils_dev)
 
-Just a collection of functions and classes I want to reuse in different other
-packages.
+Just a collection of utilities I want to reuse in my other packages.

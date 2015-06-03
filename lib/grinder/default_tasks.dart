@@ -20,7 +20,7 @@ final existingSourceDirs =
 main(List<String> args) => grind(args);
 
 @Task('Run analyzer')
-analyze() => _analyze();
+analyze() => analyzeTask();
 
 @Task('Runn all tests')
 test() => testTask(['vm', 'content-shell']);
@@ -35,30 +35,30 @@ testWeb() => testTask(['content-shell']);
 
 @DefaultTask('Check everything')
 @Depends(analyze, checkFormat, lint, test)
-check() => _check();
+check() => checkTask();
 
 @Task('Check source code format')
 checkFormat() => checkFormatTask(existingSourceDirs);
 
 /// format-all - fix all formatting issues
 @Task('Fix all source format issues')
-format() => _format();
+format() => formatTask();
 
 @Task('Run lint checks')
-lint() => _lint();
+lint() => lintTask();
 
 @Depends(check, coverage)
 @Task('Travis')
 travis() {}
 
 @Task('Gather and send coverage data.')
-coverage() => _coverage();
+coverage() => coverageTask();
 
-_analyze() => new PubApp.global('tuneup').run(['check']);
+analyzeTask() => new PubApp.global('tuneup').run(['check']);
 
-_check() => run('pub', arguments: ['publish', '-n']);
+checkTask() => run('pub', arguments: ['publish', '-n']);
 
-_coverage() {
+coverageTask() {
   final String coverageToken = io.Platform.environment['REPO_TOKEN'];
 
   if (coverageToken != null) {
@@ -77,10 +77,10 @@ _coverage() {
   }
 }
 
-_format() => new PubApp.global('dart_style').run(
+formatTask() => new PubApp.global('dart_style').run(
     ['-w']..addAll(existingSourceDirs), script: 'format');
 
-_lint() => new PubApp.global('linter')
+lintTask() => new PubApp.global('linter')
     .run(['--stats', '-ctool/lintcfg.yaml']..addAll(existingSourceDirs));
 
 Future testTask(List<String> platforms,
