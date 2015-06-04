@@ -68,8 +68,7 @@ coverageTaskImpl() {
   final String coverageToken = io.Platform.environment['REPO_TOKEN'];
 
   if (coverageToken != null) {
-    PubApp coverallsApp = new PubApp.global('dart_coveralls');
-    coverallsApp.run(
+    new PubApp.global('dart_coveralls').run(
         ['report', '--retry', '2', '--exclude-test-files', 'test/all.dart']);
   } else {
     log('Skipping coverage task: no environment variable `REPO_TOKEN` found.');

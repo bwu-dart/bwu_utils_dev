@@ -9,9 +9,14 @@ final _log = new Logger('bwu_utils.test.testing.web_driver');
 main([List<String> args]) {
   initLogging(args);
 
-  WebDriverFactory wdFactory = createDriverFactory();
+  WebDriverFactory wdFactory;
 
   group('web_driver', () {
+    setUp(() {
+      if (wdFactory == null) {
+        wdFactory = createDriverFactory();
+      }
+    });
     WebDriver driver;
     PubServe pubServe;
     int finishedTestCount = 0;

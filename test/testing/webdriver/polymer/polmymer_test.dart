@@ -13,10 +13,15 @@ main([List<String> args]) {
 //  WebDriverFactory wdFactory = new ChromeDriverFactory()
   //..chromeOptions['binary'] = '/home/zoechi/Downloads/Dart/manual/dartium-lucid64-full-stable-45104.0/chrome';
   //whichSync('dartium', orElse: () => null);
-  WebDriverFactory wdFactory =
-      createDriverFactory(); // TODO(zoechi) make it work with Dartium
+  WebDriverFactory wdFactory;
 
   group('selenium', () {
+    setUp(() {
+      if (wdFactory == null) {
+        wdFactory = createDriverFactory();
+      }
+    });
+
     WebDriver driver;
     PubServe pubServe;
 //    int finishedTests;
