@@ -54,36 +54,41 @@ travis() {}
 @Task('Gather and send coverage data.')
 coverage() => coverageTask();
 
-Function analyzeTask = () => new PubApp.global('tuneup').run(['check']);
+Function analyzeTask = analyzeTaskImpl;
 
-Function checkTask = () => run('pub', arguments: ['publish', '-n']);
+analyzeTaskImpl() => new PubApp.global('tuneup').run(['check']);
 
-Function coverageTask = () {
+Function checkTask = checkTaskImpl;
+
+checkTaskImpl() => run('pub', arguments: ['publish', '-n']);
+
+Function coverageTask = coverageTaskImpl;
+
+coverageTaskImpl() {
   final String coverageToken = io.Platform.environment['REPO_TOKEN'];
 
   if (coverageToken != null) {
     PubApp coverallsApp = new PubApp.global('dart_coveralls');
-    coverallsApp.run([
-      'report',
-      '--token',
-      coverageToken,
-      '--retry',
-      '2',
-      '--exclude-test-files',
-      'test/all.dart'
-    ]);
+    coverallsApp.run(
+        ['report', '--retry', '2', '--exclude-test-files', 'test/all.dart']);
   } else {
     log('Skipping coverage task: no environment variable `REPO_TOKEN` found.');
   }
-};
+}
 
-Function formatTask = () => new PubApp.global('dart_style').run(
+Function formatTask = formatTaskImpl;
+
+formatTaskImpl() => new PubApp.global('dart_style').run(
     ['-w']..addAll(existingSourceDirs), script: 'format');
 
-Function lintTask = () => new PubApp.global('linter')
+Function lintTask = lintTaskImpl;
+
+lintTaskImpl() => new PubApp.global('linter')
     .run(['--stats', '-ctool/lintcfg.yaml']..addAll(existingSourceDirs));
 
-Function testTask = (List<String> platforms,
+Function testTask = testTaskImpl;
+
+testTaskImpl(List<String> platforms,
     {bool runPubServe: false, bool runSelenium: false}) async {
   final seleniumJar = io.Platform.environment['SELENIUM_JAR'];
 
@@ -126,7 +131,7 @@ Function testTask = (List<String> platforms,
       selenium.stop();
     }
   }
-};
+}
 
 //  final chromeBin = '-Dwebdriver.chrome.bin=/usr/bin/google-chrome';
 //  final chromeDriverBin = '-Dwebdriver.chrome.driver=/usr/local/apps/webdriver/chromedriver/2.15/chromedriver_linux64/chromedriver';
