@@ -15,7 +15,7 @@ import 'package:bwu_utils_dev/testing_server.dart';
 
 const sourceDirs = const ['bin', 'example', 'lib', 'test', 'tool', 'web'];
 final existingSourceDirs =
-    sourceDirs.where((d) => new io.Directory(d).existsSync());
+    sourceDirs.where((d) => new io.Directory(d).existsSync()).toList();
 
 main(List<String> args) => grind(args);
 
