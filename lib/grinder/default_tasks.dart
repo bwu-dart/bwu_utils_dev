@@ -54,11 +54,11 @@ travis() {}
 @Task('Gather and send coverage data.')
 coverage() => coverageTask();
 
-analyzeTask() => new PubApp.global('tuneup').run(['check']);
+Function analyzeTask = () => new PubApp.global('tuneup').run(['check']);
 
-checkTask() => run('pub', arguments: ['publish', '-n']);
+Function checkTask = () => run('pub', arguments: ['publish', '-n']);
 
-coverageTask() {
+Function coverageTask = () {
   final String coverageToken = io.Platform.environment['REPO_TOKEN'];
 
   if (coverageToken != null) {
@@ -75,15 +75,15 @@ coverageTask() {
   } else {
     log('Skipping coverage task: no environment variable `REPO_TOKEN` found.');
   }
-}
+};
 
-formatTask() => new PubApp.global('dart_style').run(
+Function formatTask = () => new PubApp.global('dart_style').run(
     ['-w']..addAll(existingSourceDirs), script: 'format');
 
-lintTask() => new PubApp.global('linter')
+Function lintTask = () => new PubApp.global('linter')
     .run(['--stats', '-ctool/lintcfg.yaml']..addAll(existingSourceDirs));
 
-Future testTask(List<String> platforms,
+Function testTask = (List<String> platforms,
     {bool runPubServe: false, bool runSelenium: false}) async {
   final seleniumJar = io.Platform.environment['SELENIUM_JAR'];
 
@@ -126,7 +126,7 @@ Future testTask(List<String> platforms,
       selenium.stop();
     }
   }
-}
+};
 
 //  final chromeBin = '-Dwebdriver.chrome.bin=/usr/bin/google-chrome';
 //  final chromeDriverBin = '-Dwebdriver.chrome.driver=/usr/local/apps/webdriver/chromedriver/2.15/chromedriver_linux64/chromedriver';

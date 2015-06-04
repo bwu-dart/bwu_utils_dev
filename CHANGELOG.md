@@ -5,3 +5,4 @@
 - initial release
 - add default grinder tasks
 - fix existingSourceDirs to return a `List` instead of a `WhereIterable`
+- fix tests or disable them

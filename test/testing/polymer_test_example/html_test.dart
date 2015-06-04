@@ -23,7 +23,7 @@ init() {
 
     test('simple DOM elements', () {
       // set up
-      final elem = dom.document.querySelector('#child') as ChildElement;
+      final elem = dom.document.querySelector('#child');
 
       // exercise
       final parent = getParentElement(getParentElement(elem));
@@ -36,7 +36,7 @@ init() {
 
     test('Polymer elements', () {
       // set up
-      final elem = dom.document.querySelector('#polymer-child');
+      final elem = dom.document.querySelector('#polymer-child') as ChildElement;
 
       // exercise
       final parent = getParentElement(elem);
