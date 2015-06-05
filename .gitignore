@@ -1,9 +1,10 @@
-
-### Dart template
 # Don’t commit the following directories created by pub.
 .pub/
 build/
 packages
+
+# used for travis (might be created during test/development)
+_install
 
 ## Directory-based project format:
 .idea/

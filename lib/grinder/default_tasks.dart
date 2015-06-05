@@ -2,10 +2,13 @@ library bwu_utils_dev.grinder.default_tasks;
 
 import 'dart:io' as io;
 import 'dart:async' show Future, Stream;
-import 'package:grinder/grinder.dart';
-export 'package:grinder/grinder.dart' show DefaultTask, Depends, Task;
+import 'package:bwu_dart_archive_downloader/bwu_dart_archive_downloader.dart';
+import 'package:bwu_dart_archive_downloader/dart_update.dart';
 import 'package:bwu_utils_dev/grinder.dart';
 import 'package:bwu_utils_dev/testing_server.dart';
+import 'package:grinder/grinder.dart';
+export 'package:grinder/grinder.dart' show DefaultTask, Depends, Task, grind;
+import 'package:pub_semver/pub_semver.dart';
 
 // TODO(zoechi) check if version was incremented
 // TODO(zoechi) check if CHANGELOG.md contains version
@@ -47,12 +50,15 @@ format() => formatTask();
 @Task('Run lint checks')
 lint() => lintTask();
 
-@Depends(check, coverage)
+@Depends(travisPrepare, check, coverage)
 @Task('Travis')
-travis() {}
+travis() => travisTask();
 
 @Task('Gather and send coverage data.')
 coverage() => coverageTask();
+
+@Task('Set up Travis prerequisites')
+travisPrepare() => travisPrepareTask();
 
 Function analyzeTask = analyzeTaskImpl;
 
@@ -91,8 +97,14 @@ testTaskImpl(List<String> platforms,
     {bool runPubServe: false, bool runSelenium: false}) async {
   final seleniumJar = io.Platform.environment['SELENIUM_JAR'];
 
-  var pubServe;
-  var selenium;
+  final environment = {};
+  if (platforms.contains('content-shell')) {
+    environment['PATH'] =
+        '${io.Platform.environment['PATH']}:${downloadsInstallPath}/content_shell';
+  }
+
+  PubServe pubServe;
+  SeleniumStandaloneServer selenium;
   final servers = <Future<RunProcess>>[];
 
   try {
@@ -115,13 +127,12 @@ testTaskImpl(List<String> platforms,
 
     await Future.wait(servers);
 
+    final args = [];
     if (runPubServe) {
-      new PubApp.local('test').run(
-          ['--pub-serve=${pubServe.directoryPorts['test']}']
-        ..addAll(platforms.map((p) => '-p${p}')));
-    } else {
-      new PubApp.local('test').run([]..addAll(platforms.map((p) => '-p${p}')));
+      args.add('--pub-serve=${pubServe.directoryPorts['test']}');
     }
+    new PubApp.local('test').run([]..addAll(platforms.map((p) => '-p${p}')),
+        runOptions: new RunOptions(environment: environment));
   } finally {
     if (pubServe != null) {
       pubServe.stop();
@@ -134,3 +145,66 @@ testTaskImpl(List<String> platforms,
 
 //  final chromeBin = '-Dwebdriver.chrome.bin=/usr/bin/google-chrome';
 //  final chromeDriverBin = '-Dwebdriver.chrome.driver=/usr/local/apps/webdriver/chromedriver/2.15/chromedriver_linux64/chromedriver';
+
+Function travisTask = () {};
+
+Function travisPrepareTask = travisPrepareTaskImpl;
+
+travisPrepareTaskImpl() async {
+  print('travisPrepareTaskImpl');
+  if (doInstallContentShell) {
+    print('contentShell');
+    await installContentShell();
+    print('contentShell done');
+  }
+  String pubVar = io.Platform.environment['PUB'];
+  if (pubVar == 'DOWNGRADE') {
+    print('downgrade');
+    Pub.downgrade();
+    print('downgrade done');
+  } else if (pubVar == 'UPGRADE') {
+    print('upgrade');
+    Pub.upgrade();
+    print('upgrade done');
+  } else {
+    // Travis by default runs `pub get`
+  }
+}
+
+bool doInstallContentShell = true;
+
+String downloadsInstallPath = '_install';
+
+DownloadChannel get channelFromTravisDartVersion {
+  final travisVersion = io.Platform.environment['TRAVIS_DART_VERSION'];
+  if (travisVersion == 'dev') return DownloadChannel.devRelease;
+  return DownloadChannel.stableRelease;
+}
+
+Future<io.File> installContentShell() async {
+  return installDartArtifact(new DartiumFile.contentShellZip(
+          Platform.getFromSystemPlatform(prefer64bit: true)),
+      new io.Directory(downloadsInstallPath), 'content_shell',
+      channel: channelFromTravisDartVersion);
+}
+
+Future<io.File> installDartArtifact(
+    DownloadFile downloadFile, io.Directory downloadDirectory, String extractAs,
+    {DownloadChannel channel: DownloadChannel.stableRelease,
+    String version: 'latest'}) async {
+  print('download ${downloadFile}');
+  assert(downloadFile != null);
+  assert(channel != null);
+  assert(version != null && version.isNotEmpty);
+  final downloader = new DartArchiveDownloader(downloadDirectory);
+  String versionDirectoryName = version;
+  if (version != 'latest') {
+    versionDirectoryName =
+        await downloader.findVersion(channel, new Version.parse(version));
+  }
+  final uri = await channel.getUri(downloadFile, version: versionDirectoryName);
+  final file = await downloader.downloadFile(uri);
+  await installArchive(file, downloadDirectory,
+      replaceRootDirectoryName: extractAs);
+  return file;
+}
