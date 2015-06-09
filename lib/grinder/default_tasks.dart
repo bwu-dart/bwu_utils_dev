@@ -19,6 +19,7 @@ import 'package:pub_semver/pub_semver.dart';
 const sourceDirs = const ['bin', 'example', 'lib', 'test', 'tool', 'web'];
 final existingSourceDirs =
     sourceDirs.where((d) => new io.Directory(d).existsSync()).toList();
+final subProjects = getSubProjects();
 
 main(List<String> args) => grind(args);
 
@@ -66,7 +67,10 @@ analyzeTaskImpl() => new PubApp.global('tuneup').run(['check']);
 
 Function checkTask = checkTaskImpl;
 
-checkTaskImpl() => run('pub', arguments: ['publish', '-n']);
+checkTaskImpl() {
+  run('pub', arguments: ['publish', '-n']);
+  checkSubProjects();
+}
 
 Function coverageTask = coverageTaskImpl;
 
@@ -110,7 +114,7 @@ testTaskImpl(List<String> platforms,
   try {
     if (runPubServe) {
       pubServe = new PubServe();
-      print('start pub serve');
+      log('start pub serve');
       servers.add(pubServe.start(directories: const ['test']).then((_) {
         pubServe.stdout.listen((e) => io.stdout.add(e));
         pubServe.stderr.listen((e) => io.stderr.add(e));
@@ -118,7 +122,7 @@ testTaskImpl(List<String> platforms,
     }
     if (runSelenium) {
       selenium = new SeleniumStandaloneServer();
-      print('start Selenium standalone server');
+      log('start Selenium standalone server');
       servers.add(selenium.start(seleniumJar, args: []).then((_) {
         selenium.stdout.listen((e) => io.stdout.add(e));
         selenium.stderr.listen((e) => io.stderr.add(e));
@@ -151,21 +155,21 @@ Function travisTask = () {};
 Function travisPrepareTask = travisPrepareTaskImpl;
 
 travisPrepareTaskImpl() async {
-  print('travisPrepareTaskImpl');
+  log('travisPrepareTaskImpl');
   if (doInstallContentShell) {
-    print('contentShell');
+    log('contentShell');
     await installContentShell();
-    print('contentShell done');
+    log('contentShell done');
   }
   String pubVar = io.Platform.environment['PUB'];
   if (pubVar == 'DOWNGRADE') {
-    print('downgrade');
+    log('downgrade');
     Pub.downgrade();
-    print('downgrade done');
+    log('downgrade done');
   } else if (pubVar == 'UPGRADE') {
-    print('upgrade');
+    log('upgrade');
     Pub.upgrade();
-    print('upgrade done');
+    log('upgrade done');
   } else {
     // Travis by default runs `pub get`
   }
@@ -192,7 +196,7 @@ Future<io.File> installDartArtifact(
     DownloadFile downloadFile, io.Directory downloadDirectory, String extractAs,
     {DownloadChannel channel: DownloadChannel.stableRelease,
     String version: 'latest'}) async {
-  print('download ${downloadFile}');
+  log('download ${downloadFile}');
   assert(downloadFile != null);
   assert(channel != null);
   assert(version != null && version.isNotEmpty);
@@ -207,4 +211,27 @@ Future<io.File> installDartArtifact(
   await installArchive(file, downloadDirectory,
       replaceRootDirectoryName: extractAs);
   return file;
+}
+
+typedef List<io.Directory> GetSubProjects();
+
+GetSubProjects getSubProjects = getSubProjectsImpl;
+
+List<io.Directory> getSubProjectsImpl() => io.Directory.current
+    .listSync(recursive: true)
+    .where((d) => d.path.endsWith('pubspec.yaml') &&
+        d.parent.absolute.path != io.Directory.current.absolute.path)
+    .map((d) => d.parent)
+    .toList();
+
+Function checkSubProjects = checkSubProjectsImpl;
+
+void checkSubProjectsImpl() {
+  subProjects.forEach((p) {
+    log('=== check sub-project: ${p.path} ===');
+    run('dart',
+        arguments: ['-c', 'tool/grind.dart', 'check'],
+        runOptions: new RunOptions(
+            workingDirectory: p.path, includeParentEnvironment: true));
+  });
 }
