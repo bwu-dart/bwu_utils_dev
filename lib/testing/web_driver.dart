@@ -226,9 +226,9 @@ class DartiumWebDriver extends CustomWebDriver {
   DartiumWebDriver._(WebDriver driver, String userAgent)
       : super._(driver, userAgent);
 
-  // TODO: implement onAfterCommand
+  // TODO: implement onCommand
   @override
-  Stream<WebDriverCommandEvent> get onAfterCommand => null;
+  Stream<WebDriverCommandEvent> get onCommand => null;
 }
 
 class CustomWebDriver implements WebDriver {
@@ -331,7 +331,7 @@ class CustomWebDriver implements WebDriver {
   @override
   Stream<Window> get windows => _driver.windows;
 
-  // TODO: implement onAfterCommand
+  // TODO: implement onCommand
   @override
-  Stream<WebDriverCommandEvent> get onAfterCommand => null;
+  Stream<WebDriverCommandEvent> get onCommand => null;
 }

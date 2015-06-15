@@ -1,5 +1,5 @@
 name: bwu_utils_dev
-version: 0.1.0-dev.11
+version: 0.1.0-dev.12
 description: A collection of utilities for testing and task automatization.
 homepage: https://github.com/bwu-dart/bwu_utils_dev
 author: Günter Zöchbauer <guenter@gzoechbauer.com>
@@ -8,19 +8,18 @@ environment:
 
 dependencies:
   args: '>=0.13.0 <0.14.0'
-  bwu_dart_archive_downloader: '>=0.2.0+1 <0.4.0'
   bwu_utils: '^0.1.0-dev.3'
-  grinder: '>=0.7.0 <0.8.0'
   html: '>=0.12.1 <0.13.0'
   http: '>=0.11.2 <0.12.0'
   logging: '>=0.11.0 <0.12.0'
   path: '>=1.0.0 <2.0.0'
-  pub_semver: '^1.2.1'
   quiver: '>=0.21.3 <0.22.0'
   quiver_log: '>=1.0.3 <2.0.0'
   webdriver: '>=0.10.0-pre.9 <0.11.0'
 
 dev_dependencies:
+  bwu_grinder_tasks: ^0.1.0
+  grinder: '>=0.7.0 <0.8.0'
   polymer: '>=0.16.3+2 <0.17.0'
   test: '>=0.12.0 < 0.13.0'
 
