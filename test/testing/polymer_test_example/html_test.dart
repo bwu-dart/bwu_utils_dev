@@ -10,20 +10,21 @@ export 'package:polymer/init.dart';
 import 'child_element.dart';
 import 'app_element.dart';
 
-final _log = new Logger('bwu_utils.test.shared.test_parse_num');
+//final _log = new Logger('bwu_utils.test.shared.test_parse_num');
 
 @whenPolymerReady
 init() {
-  initLogging();
+//  initLogging();
   // just to silence the analyzer
   dom.document.querySelector('app-element') as AppElement;
 
   group('getParentElement', () {
-    setUp(() async {});
+//    setUp(() async {});
 
     test('simple DOM elements', () {
       // set up
       final elem = dom.document.querySelector('#child');
+      expect(elem, isNotNull);
 
       // exercise
       final parent = getParentElement(getParentElement(elem));
